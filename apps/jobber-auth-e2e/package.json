@@ -1,0 +1,26 @@
+{
+  "name": "@jobber/jobber-auth-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "jobber-auth-e2e",
+    "implicitDependencies": [
+      "jobber-auth"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/jobber-auth-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "jobber-auth:build"
+        ]
+      }
+    }
+  }
+}

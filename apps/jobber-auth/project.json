@@ -6,10 +6,10 @@
   "tags": [],
   "targets": {
     "build": {
-      "dependsOn": ["generate-prisma", "^build"]
+      "dependsOn": ["generate-types", "^build"]
     },
     "test": {
-      "dependsOn": ["generate-prisma"]
+      "dependsOn": ["generate-types"]
     },
     "serve": {
       "executor": "@nx/js:node",

@@ -6,10 +6,10 @@
   "tags": [],
   "targets": {
     "build": {
-      "dependsOn": ["generate-types", "^build"]
+      "dependsOn": ["generate-prisma", "generate-ts-proto"]
     },
     "test": {
-      "dependsOn": ["generate-types"]
+      "dependsOn": ["generate-prisma"]
     },
     "serve": {
       "executor": "@nx/js:node",
@@ -28,7 +28,7 @@
         }
       }
     },
-    "generate-types": {
+    "generate-prisma": {
       "command": "prisma generate",
       "options": {
         "cwd": "{projectRoot}",
@@ -41,6 +41,9 @@
       "options": {
         "cwd": "{projectRoot}"
       }
+    },
+    "generate-ts-proto": {
+      "command": "nx generate-ts-proto"
     }
   }
 }

@@ -5,7 +5,7 @@ import { Client, Consumer, Message, Producer } from 'pulsar-client';
 @Injectable()
 export class PulsarClient implements OnModuleDestroy {
   private readonly client = new Client({
-    serviceUrl: this.configService.getOrThrow('PULSAR'),
+    serviceUrl: this.configService.getOrThrow<string>('PULSAR_SERVICE_URL'),
   });
 
   private readonly producers: Producer[] = [];
@@ -22,6 +22,7 @@ export class PulsarClient implements OnModuleDestroy {
 
   async createConsumer(topic: string, listener: (message: Message) => void) {
     const consumer = await this.client.subscribe({
+      subscriptionType: 'Shared',
       topic,
       subscription: 'jobber',
       listener,

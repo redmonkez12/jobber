@@ -1,22 +1,29 @@
 ﻿import { Producer } from 'pulsar-client';
-import { PulsarClient } from '@jobber/pulsar';
-import { OnModuleDestroy } from '@nestjs/common';
+import { PulsarClient, serialize } from '@jobber/pulsar';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import { BadRequestException } from '@nestjs/common';
 
-export abstract class AbstractJob<T> implements OnModuleDestroy {
+export abstract class AbstractJob<T extends object> {
   private producer: Producer;
+  protected abstract messageClass: new () => T;
 
   constructor(private readonly pulsarClient: PulsarClient) {}
 
   async execute(data: T, job: string) {
-    if (this.producer) {
+    await this.validateData(data)
+    if (!this.producer) {
       this.producer = await this.pulsarClient.createProducer(job);
     }
     await this.producer.send({
-      data: Buffer.from(JSON.stringify(data)),
+      data: serialize(data),
     });
   }
 
-  async onModuleDestroy() {
-    await this.producer.close();
+  private async validateData(data: T) {
+    const errors = await validate(plainToInstance(this.messageClass, data));
+    if (errors.length) {
+      throw new BadRequestException(`Job data invalid: ${JSON.stringify(errors)}`);
+    }
   }
 }

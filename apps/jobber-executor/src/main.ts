@@ -10,7 +10,6 @@ import { init } from '@jobber/nestjs';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   init(app);
-
 }
 
 bootstrap();
